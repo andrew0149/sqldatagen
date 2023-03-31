@@ -1,6 +1,9 @@
 from enum import IntEnum
 from datetime import date, datetime
+from cutie import select
+
 from generators import *
+
 
 class column_data_types(IntEnum):
 	Autoincrement = 1
@@ -187,26 +190,16 @@ column_names = [
 columns = []
 for column in column_names:
 
+	print(f'Select the data type of column "{column}" : ')
+
+	data_type_options = [str(data_type.name).replace('_', ' ') 
+							for data_type 
+							in column_data_types]
+	column_data_type = select(data_type_options)
+
 	print()
 
-	for data_type in column_data_types:
-		print(f'{data_type.value}) {data_type.name.replace("_", " ")}')
-
-	print()
-	
-	column_data_type = 0
-	while column_data_type == 0:
-		try:
-			column_data_type = int(input(
-				f'Select the data type of column "{column}" [1-{len(column_data_types)}]: '
-				))
-			if column_data_type < 1 or column_data_type > len(column_data_types):
-				column_data_type = 0
-				raise Exception
-		except Exception:
-			print('Selected data type is invalid. Try again')
-
-	columns.append(generate_requested_data(rows_count, column_data_type, column))
+	columns.append(generate_requested_data(rows_count, column_data_type + 1, column))
 
 print()
 
