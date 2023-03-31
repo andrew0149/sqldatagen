@@ -1,9 +1,8 @@
 from enum import IntEnum
 from datetime import date, datetime
 from cutie import select
-
+from tabulate import tabulate
 from generators import *
-
 
 class column_data_types(IntEnum):
 	Autoincrement = 1
@@ -233,3 +232,16 @@ with open(
 			output_file.write(str(columns[column][row]))
 			if column != len(column_names) - 1:
 				output_file.write(delimiter)
+
+print('Do you want to preview your table? ')
+if select(['Yes', 'No']) == 0:
+	print()
+
+	table_preview = list(zip(*columns))
+
+	is_table_big = rows_count > 10
+	if is_table_big:
+		table_preview = table_preview[:9]
+		table_preview.append(['...' for column in column_names])	
+	
+	print(tabulate(table_preview, headers = column_names))
